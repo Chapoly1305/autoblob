@@ -32,7 +32,7 @@ class AutoBlob(Blob):
         Backend.__init__(self, binary, binary_stream, **kwargs)
         arch, base, entry = autodetect_initial(self._binary_stream)
 
-        if self.arch is None:
+        if self._arch is None:
             if arch is None:
                 raise CLEError("AutoBlob couldn't determine your arch.  Try specifying one.!")
             if isinstance(arch, str):
