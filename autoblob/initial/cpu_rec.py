@@ -2,7 +2,7 @@
 import logging
 import sys
 import os
-import imp
+import importlib.util
 l = logging.getLogger("autoblob.cpu_rec")
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
@@ -13,12 +13,16 @@ paths = ["../lib/cpu_rec/cpu_rec.py",
 def find_cpu_rec():
     for filename in paths:
         try:
-            path, name = os.path.split(os.path.abspath(filename))
-            name, ext = os.path.splitext(name)
-            l.debug(path, name)
-            f, filename, data = imp.find_module(name, [path])
-            mod = imp.load_module(name, f, filename, data)
-            l.debug('After: %s in sys.modules ==' % name, name in sys.modules)
+            abs_path = os.path.abspath(filename)
+            if not os.path.exists(abs_path):
+                continue
+            name = os.path.splitext(os.path.basename(abs_path))[0]
+            l.debug(f"Loading {name} from {abs_path}")
+            spec = importlib.util.spec_from_file_location(name, abs_path)
+            mod = importlib.util.module_from_spec(spec)
+            sys.modules[name] = mod
+            spec.loader.exec_module(mod)
+            l.debug('After: %s in sys.modules == %s' % (name, name in sys.modules))
             return mod
         except:
             pass
