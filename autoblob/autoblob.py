@@ -47,7 +47,7 @@ class AutoBlob(Blob):
             l.warning("AutoBlob could not detect the base address.  Assuming 0")
             self.linked_base = 0
         self.mapped_base = self.linked_base
-        l.error(hex(self.mapped_base))
+        l.debug("Mapped base: %s", hex(self.mapped_base))
         self._entry = self._custom_entry_point if self._custom_entry_point is not None else entry
         if self._entry is None:
             l.warning("Autoblob could not detect the entry point, assuming 0")
