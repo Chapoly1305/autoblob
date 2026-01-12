@@ -25,11 +25,11 @@ AutoBlob extends CLE's `Blob` backend and runs multiple detection methods in seq
    - Identifies ARM Cortex-M architecture
 
 2. **ARM IVT (Interrupt Vector Table) Finder**
-   - Examines first 8 bytes for valid ARM IVT structure
+   - Examines first 256 bytes for valid ARM IVT structure
    - Validates stack pointer range (0x1FFF0000 - 0x20100000)
    - Reads reset vector for entry point
    - Supports both little-endian and big-endian ARM
-   - Estimates base address from upper 16 bits of entry point
+   - Estimates base address using minimum vector address approach (analyzes all IVT entries to find lowest code address, then aligns to 4KB boundary)
 
 3. **CubScout Architecture Detector**
    - Scans binary for function prologs and epilogs using regex patterns
